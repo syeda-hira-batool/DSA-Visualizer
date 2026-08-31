@@ -1,137 +1,186 @@
-/* ---------- Panel: pastel grid background ---------- */
-.dsa-bg-panel {
+/* ---------- Full page: pastel grid background ---------- */
+.dsa-bg-page {
   position: relative;
   width: 100%;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
   overflow: hidden;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 2.5rem 1.5rem;
-  min-height: 150px;
   background-color: #fffce1;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.65) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.65) 1px, transparent 1px),
-    radial-gradient(circle at 12% 20%, #cfebff 0%, transparent 42%),
-    radial-gradient(circle at 85% 15%, #f599c6 0%, transparent 40%),
-    radial-gradient(circle at 25% 90%, #ffb6a6 0%, transparent 45%),
-    radial-gradient(circle at 90% 85%, #9bcec1 0%, transparent 45%),
-    radial-gradient(circle at 55% 50%, #ffddb0 0%, transparent 55%);
+    radial-gradient(circle at 10% 15%, #cfebff 0%, transparent 40%),
+    radial-gradient(circle at 88% 12%, #f599c6 0%, transparent 38%),
+    radial-gradient(circle at 20% 88%, #ffb6a6 0%, transparent 42%),
+    radial-gradient(circle at 92% 85%, #9bcec1 0%, transparent 42%),
+    radial-gradient(circle at 50% 50%, #ffddb0 0%, transparent 55%);
   background-size:
-    28px 28px, 28px 28px, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    32px 32px, 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
     100% 100%;
 }
 
-.dsa-bg-row {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* ---------- Stack icon (left side) ---------- */
-.dsa-stack-wrap,
-.dsa-queue-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.dsa-stack {
-  position: relative;
-  height: 3.5rem;
-  width: 2.75rem;
-}
-
-.dsa-stack-plate {
+.sr-only {
   position: absolute;
-  left: 50%;
-  height: 0.75rem;
-  width: 2.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.dsa-caption {
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(30, 30, 30, 0.5);
-}
-
-/* ---------- Letters flying into their queue slots ---------- */
-.dsa-letters {
+/* ---------- The stack + queue row ---------- */
+.dsa-hero-row {
   position: relative;
-  height: 48px;
+}
+
+.dsa-cycle {
+  position: relative;
+  width: 100%;
+  height: 100%;
   transition-property: opacity;
   transition-timing-function: ease-in;
 }
 
-.dsa-letter {
+/* the tray/pile that visually holds the stack */
+.dsa-stack-tray {
   position: absolute;
-  top: 0;
-  height: 44px;
+  left: 0;
+  top: 50%;
+  height: 78%;
+  transform: translateY(-50%);
+  border-radius: 1.25rem;
+  border: 2px dashed rgba(30, 30, 30, 0.18);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.dsa-stack-card {
+  position: absolute;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 0.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-weight: 700;
-  font-size: 1.125rem;
-  color: rgba(30, 30, 30, 0.8);
+  font-size: 1.3rem;
+  color: rgba(30, 30, 30, 0.82);
+  animation-name: dsa-stack-leave;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+.dsa-caption {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(30, 30, 30, 0.5);
+}
+
+/* ---------- Queue: dashed slot guides ---------- */
+.dsa-queue-tray {
+  position: absolute;
+  z-index: -1;
+  display: flex;
+  height: 56px;
+}
+
+.dsa-slot {
+  height: 56px;
+  border-radius: 0.6rem;
+  border: 2px dashed rgba(30, 30, 30, 0.15);
+}
+
+/* ---------- Letters flying from the pile into their slot ---------- */
+.dsa-letter {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: rgba(30, 30, 30, 0.85);
   animation-name: dsa-letter-pop;
   animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
   animation-fill-mode: both;
 }
 
-/* dashed queue-slot guides sitting behind the letters */
-.dsa-slots {
-  position: absolute;
-  top: 0;
-  z-index: -1;
-  display: flex;
-  height: 44px;
-}
-
-.dsa-slot {
-  height: 44px;
-  border-radius: 0.5rem;
-  border: 1px dashed rgba(30, 30, 30, 0.15);
-}
-
 @keyframes dsa-letter-pop {
   0% {
-    transform: translate(calc(-64px + var(--sx, 0px)), 26px) scale(0.55)
-      rotate(var(--srot, 0deg));
-    opacity: 0.55;
-  }
-  55% {
-    transform: translate(calc(var(--tx) - 5px), -7px) scale(1.14) rotate(3deg);
+    transform: translate(var(--sx, 0px), var(--sy, 0px)) scale(0.9) rotate(var(--srot, 0deg));
     opacity: 1;
   }
-  78% {
-    transform: translate(var(--tx), 2px) scale(0.96) rotate(-2deg);
+  50% {
+    transform: translate(calc(var(--tx) - 10px), -18px) scale(1.2) rotate(4deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(var(--tx), 4px) scale(0.96) rotate(-2deg);
     opacity: 1;
   }
   100% {
-    transform: translate(var(--tx), 0) scale(1) rotate(0deg);
+    transform: translate(var(--tx), 0px) scale(1) rotate(0deg);
     opacity: 1;
+  }
+}
+
+/* the static card left behind in the pile lifts off right as its
+   flying counterpart departs, so the handoff reads as one motion */
+@keyframes dsa-stack-leave {
+  0% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Tagline ---------- */
+.dsa-tagline {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: rgba(30, 30, 30, 0.55);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+@media (max-width: 900px) {
+  .dsa-hero-row {
+    transform: scale(0.72);
+  }
+}
+
+@media (max-width: 600px) {
+  .dsa-hero-row {
+    transform: scale(0.5);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dsa-letter {
+  .dsa-letter,
+  .dsa-stack-card {
     animation-duration: 0.01ms !important;
   }
-  .dsa-letters {
+  .dsa-cycle {
     transition-duration: 0.01ms !important;
   }
 }
