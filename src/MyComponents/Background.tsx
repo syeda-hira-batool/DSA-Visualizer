@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import './CSSFILES/Background.css';
 
 const WORD = 'DSA VISUALIZER';
 
@@ -10,7 +11,7 @@ const PASTELS = [
 
 const SLOT = 40; // px per letter slot
 const SPACE_SLOT = 20; // px for the gap between DSA and VISUALIZER
-const POP_DURATION = 520; // ms, must match .letter-pop animation-duration below
+const POP_DURATION = 520; // ms — must match animation-duration set below
 const STAGGER = 90; // ms between each letter's pop start
 const HOLD = 1500; // ms fully formed before fading
 const FADE = 550; // ms fade-out transition
@@ -34,7 +35,7 @@ export default function Background() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cycle]);
 
-  // precompute x offset (slot start) for every character, accounting for the wider space gap
+  // precompute each letter's target x offset, giving the space a narrower gap
   let cursor = 0;
   const slotX = letters.map((ch) => {
     const x = cursor;
@@ -44,19 +45,15 @@ export default function Background() {
   const rowWidth = cursor;
 
   return (
-    <div
-      aria-hidden="true"
-      className="pastel-grid-bg relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-hairline py-10"
-      style={{ minHeight: 150 }}
-    >
-      <div className="flex items-center gap-6 sm:gap-10">
-        {/* stack icon */}
-        <div className="flex flex-col items-center gap-2">
-          <div className="relative h-14 w-11">
+    <div className="dsa-bg-panel" aria-hidden="true">
+      <div className="dsa-bg-row">
+        {/* stack icon the letters "pop" out of */}
+        <div className="dsa-stack-wrap">
+          <div className="dsa-stack">
             {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="absolute left-1/2 h-3 w-11 -translate-x-1/2 rounded-md border border-black/10 shadow-sm"
+                className="dsa-stack-plate"
                 style={{
                   bottom: i * 9,
                   backgroundColor: PASTELS[(i * 3) % PASTELS.length],
@@ -65,21 +62,25 @@ export default function Background() {
               />
             ))}
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-ink/50">stack</span>
+          <span className="dsa-caption">stack</span>
         </div>
 
-        {/* letters flying into their queue slots */}
-        <div className="flex flex-col items-center gap-2">
+        {/* letters flying into their queue slots, spelling the heading */}
+        <div className="dsa-queue-wrap">
           <div
             key={cycle}
-            className={`relative transition-opacity ease-in ${fading ? 'opacity-0' : 'opacity-100'}`}
-            style={{ width: rowWidth, height: 48, transitionDuration: `${FADE}ms` }}
+            className="dsa-letters"
+            style={{
+              width: rowWidth,
+              opacity: fading ? 0 : 1,
+              transitionDuration: `${FADE}ms`,
+            }}
           >
             {letters.map((ch, i) =>
               ch === ' ' ? null : (
                 <div
                   key={i}
-                  className="absolute top-0 flex h-11 items-center justify-center rounded-lg border border-black/10 font-mono text-lg font-bold text-ink/80 shadow-sm letter-pop"
+                  className="dsa-letter"
                   style={
                     {
                       left: 0,
@@ -97,22 +98,23 @@ export default function Background() {
                 </div>
               )
             )}
-            {/* dashed queue slots as a guide beneath the letters */}
-            <div className="absolute top-0 -z-10 flex h-11" style={{ width: rowWidth }}>
+
+            {/* dashed queue-slot guides behind the letters */}
+            <div className="dsa-slots" style={{ width: rowWidth }}>
               {letters.map((ch, i) =>
                 ch === ' ' ? (
                   <div key={i} style={{ width: SPACE_SLOT }} />
                 ) : (
                   <div
                     key={i}
-                    className="h-11 rounded-lg border border-dashed border-ink/15"
+                    className="dsa-slot"
                     style={{ width: SLOT - 4, marginRight: 4 }}
                   />
                 )
               )}
             </div>
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-ink/50">queue</span>
+          <span className="dsa-caption">queue</span>
         </div>
       </div>
     </div>
