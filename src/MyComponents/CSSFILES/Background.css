@@ -1,3 +1,16 @@
+/* ---------- Reset: kill the default body margin that shows as a white
+   border around the full-bleed background ---------- */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root,
+#app {
+  min-height: 100vh;
+}
+
 /* ---------- Full page: pastel grid background ---------- */
 .dsa-bg-page {
   position: relative;
@@ -39,7 +52,7 @@
 .dsa-composition {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   transition-property: opacity;
   transition-timing-function: ease-in;
 }
@@ -64,21 +77,20 @@
 .dsa-stack-box {
   display: flex;
   flex-direction: column;
-  border: 3px solid rgba(30, 30, 30, 0.65);
-  border-top: none;
-  border-radius: 0 0 0.5rem 0.5rem;
+  border: 2px solid rgba(30, 30, 30, 0.65);
+  border-radius: 0.4rem;
   overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .dsa-compartment {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid rgba(30, 30, 30, 0.35);
+  border-bottom: 1.5px solid rgba(30, 30, 30, 0.35);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-weight: 700;
-  font-size: 1.35rem;
+  font-size: 0.95rem;
   color: rgba(30, 30, 30, 0.85);
   transition: max-height 0.4s ease-in, opacity 0.3s ease-in, padding 0.4s ease-in;
   max-height: 200px;
@@ -101,20 +113,20 @@
 /* ---------- The queue box: cells fill left to right ---------- */
 .dsa-queue-box {
   display: flex;
-  border: 3px solid rgba(30, 30, 30, 0.65);
-  border-radius: 0.5rem;
+  border: 2px solid rgba(30, 30, 30, 0.65);
+  border-radius: 0.4rem;
   overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .dsa-cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 2px solid rgba(30, 30, 30, 0.35);
+  border-right: 1.5px solid rgba(30, 30, 30, 0.35);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-weight: 700;
-  font-size: 1.35rem;
+  font-size: 0.95rem;
   color: rgba(30, 30, 30, 0.85);
 }
 
@@ -153,7 +165,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 0.85rem;
   color: rgba(30, 30, 30, 0.85);
   animation-name: dsa-fly;
   animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1);
@@ -186,13 +198,13 @@
 
 @media (max-width: 900px) {
   .dsa-composition {
-    transform: scale(0.75);
+    transform: scale(0.9);
   }
 }
 
 @media (max-width: 620px) {
   .dsa-composition {
-    transform: scale(0.55);
+    transform: scale(0.75);
   }
 }
 

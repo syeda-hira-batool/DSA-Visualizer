@@ -9,12 +9,12 @@ const PASTELS = [
   '#D8C8FF', '#B8ECD0', '#FFD1DC', '#E4D9FF',
 ];
 
-const COMPARTMENT_H = 50; // height of one stack compartment / queue cell
-const STACK_WIDTH = 120; // width of the vertical stack box
-const CELL_W = 50; // width of a queue cell
-const SPACE_W = 26; // width of the gap cell (for the space in the word)
-const GAP = 130; // horizontal gap between the stack and the queue
-const TILE_SIZE = 40; // size of the small flying letter tile
+const COMPARTMENT_H = 34; // height of one stack compartment / queue cell
+const STACK_WIDTH = 88; // width of the vertical stack box
+const CELL_W = 34; // width of a queue cell
+const SPACE_W = 18; // width of the gap cell (for the space in the word)
+const GAP = 90; // horizontal gap between the stack and the queue
+const TILE_SIZE = 26; // size of the small flying letter tile
 
 const STAGGER = 480; // ms between each pop
 const FLIGHT_DURATION = 420; // ms for a letter to travel — must stay < STAGGER
@@ -97,7 +97,8 @@ export default function Background() {
 
   const originX = STACK_WIDTH / 2 - TILE_SIZE / 2;
   const originY = (COMPARTMENT_H - TILE_SIZE) / 2;
-  const targetY = (CELL_W - TILE_SIZE) / 2;
+  const queueColOffsetY = (stackH - CELL_W) / 2; // queue is vertically centered against the stack
+  const targetY = queueColOffsetY + (CELL_W - TILE_SIZE) / 2;
 
   return (
     <div className="dsa-bg-page" aria-hidden="true">
