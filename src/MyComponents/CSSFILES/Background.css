@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 2.5rem;
   overflow: hidden;
   background-color: #fffce1;
   background-image:
@@ -35,52 +35,24 @@
   border: 0;
 }
 
-/* ---------- The stack + queue row ---------- */
-.dsa-hero-row {
+/* ---------- Composition: stack (left/center) + queue (right) ---------- */
+.dsa-composition {
   position: relative;
-}
-
-.dsa-cycle {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  align-items: flex-start;
   transition-property: opacity;
   transition-timing-function: ease-in;
 }
 
-/* the tray/pile that visually holds the stack */
-.dsa-stack-tray {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 78%;
-  transform: translateY(-50%);
-  border-radius: 1.25rem;
-  border: 2px dashed rgba(30, 30, 30, 0.18);
-  background: rgba(255, 255, 255, 0.35);
-}
-
-.dsa-stack-card {
-  position: absolute;
-  left: 0;
+.dsa-stack-col,
+.dsa-queue-col {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 0.6rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: rgba(30, 30, 30, 0.82);
-  animation-name: dsa-stack-leave;
-  animation-timing-function: ease-in;
-  animation-fill-mode: forwards;
+  gap: 0.75rem;
 }
 
 .dsa-caption {
-  position: absolute;
-  transform: translateX(-50%);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 11px;
   text-transform: uppercase;
@@ -88,69 +60,118 @@
   color: rgba(30, 30, 30, 0.5);
 }
 
-/* ---------- Queue: dashed slot guides ---------- */
-.dsa-queue-tray {
-  position: absolute;
-  z-index: -1;
+/* ---------- The stack box: one compartment per letter ---------- */
+.dsa-stack-box {
   display: flex;
-  height: 56px;
+  flex-direction: column;
+  border: 3px solid rgba(30, 30, 30, 0.65);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.dsa-slot {
-  height: 56px;
-  border-radius: 0.6rem;
-  border: 2px dashed rgba(30, 30, 30, 0.15);
+.dsa-compartment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid rgba(30, 30, 30, 0.35);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: rgba(30, 30, 30, 0.85);
+  transition: max-height 0.4s ease-in, opacity 0.3s ease-in, padding 0.4s ease-in;
+  max-height: 200px;
 }
 
-/* ---------- Letters flying from the pile into their slot ---------- */
-.dsa-letter {
+.dsa-compartment.is-popped {
+  max-height: 0;
+  opacity: 0;
+  border-bottom-width: 0;
+}
+
+.dsa-compartment span {
+  transition: opacity 0.15s ease-in;
+}
+
+.dsa-compartment.is-popped span {
+  opacity: 0;
+}
+
+/* ---------- The queue box: cells fill left to right ---------- */
+.dsa-queue-box {
+  display: flex;
+  border: 3px solid rgba(30, 30, 30, 0.65);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dsa-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid rgba(30, 30, 30, 0.35);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: rgba(30, 30, 30, 0.85);
+}
+
+.dsa-cell:last-child {
+  border-right: none;
+}
+
+.dsa-cell span {
+  animation: dsa-cell-pop 0.3s ease-out;
+}
+
+@keyframes dsa-cell-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------- The flying letter in transit from stack to queue ---------- */
+.dsa-flyer {
   position: absolute;
+  top: 0;
   left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.6rem;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
+  border-radius: 0.4rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   color: rgba(30, 30, 30, 0.85);
-  animation-name: dsa-letter-pop;
-  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation-name: dsa-fly;
+  animation-timing-function: cubic-bezier(0.45, 0.05, 0.35, 1);
   animation-fill-mode: both;
+  z-index: 5;
 }
 
-@keyframes dsa-letter-pop {
+@keyframes dsa-fly {
   0% {
-    transform: translate(var(--sx, 0px), var(--sy, 0px)) scale(0.9) rotate(var(--srot, 0deg));
+    transform: translate(var(--ox), var(--oy)) scale(1);
     opacity: 1;
   }
-  50% {
-    transform: translate(calc(var(--tx) - 10px), -18px) scale(1.2) rotate(4deg);
-    opacity: 1;
-  }
-  75% {
-    transform: translate(var(--tx), 4px) scale(0.96) rotate(-2deg);
-    opacity: 1;
+  40% {
+    transform: translate(calc((var(--ox) + var(--tx)) / 2), calc(min(var(--oy), var(--ty)) - 40px)) scale(1.1);
   }
   100% {
-    transform: translate(var(--tx), 0px) scale(1) rotate(0deg);
+    transform: translate(var(--tx), var(--ty)) scale(1);
     opacity: 1;
-  }
-}
-
-/* the static card left behind in the pile lifts off right as its
-   flying counterpart departs, so the handoff reads as one motion */
-@keyframes dsa-stack-leave {
-  0% {
-    opacity: 1;
-  }
-  99% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
 
@@ -164,23 +185,22 @@
 }
 
 @media (max-width: 900px) {
-  .dsa-hero-row {
-    transform: scale(0.72);
+  .dsa-composition {
+    transform: scale(0.75);
   }
 }
 
-@media (max-width: 600px) {
-  .dsa-hero-row {
-    transform: scale(0.5);
+@media (max-width: 620px) {
+  .dsa-composition {
+    transform: scale(0.55);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dsa-letter,
-  .dsa-stack-card {
+  .dsa-flyer,
+  .dsa-compartment,
+  .dsa-cell span {
     animation-duration: 0.01ms !important;
-  }
-  .dsa-cycle {
     transition-duration: 0.01ms !important;
   }
 }

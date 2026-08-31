@@ -9,141 +9,161 @@ const PASTELS = [
   '#D8C8FF', '#B8ECD0', '#FFD1DC', '#E4D9FF',
 ];
 
-const SLOT = 56; // px per letter slot in the queue
-const SPACE_SLOT = 26; // px for the gap between DSA and VISUALIZER
-const TILE_W = 48;
-const TILE_H = 56;
-const ROW_HEIGHT = 190; // total height of the stack+queue row
-const TILE_TOP = (ROW_HEIGHT - TILE_H) / 2;
+const COMPARTMENT_H = 50; // height of one stack compartment / queue cell
+const STACK_WIDTH = 120; // width of the vertical stack box
+const CELL_W = 50; // width of a queue cell
+const SPACE_W = 26; // width of the gap cell (for the space in the word)
+const GAP = 130; // horizontal gap between the stack and the queue
+const TILE_SIZE = 40; // size of the small flying letter tile
 
-const STACK_ZONE_WIDTH = 150; // width reserved for the pile of cards
-const GAP = 100; // gap between the stack and the first queue slot
-
-const POP_DURATION = 620; // ms — must match animation-duration set below
-const STAGGER = 100; // ms between each letter's pop start
-const STACK_LEAVE_DURATION = 220; // ms for a card to lift off the pile
-const HOLD = 1700; // ms fully formed before fading
+const STAGGER = 480; // ms between each pop
+const FLIGHT_DURATION = 420; // ms for a letter to travel — must stay < STAGGER
+const HOLD = 1600; // ms fully formed before fading
 const FADE = 600; // ms fade-out transition
 
 export default function Background() {
-  const letters = WORD.split('');
-  const [cycle, setCycle] = useState(0);
+  const letters = WORD.split(''); // full word incl. space, for the queue layout
+  const stackLetters = letters.filter((ch) => ch !== ' '); // what actually sits in the stack
+
+  const [poppedCount, setPoppedCount] = useState(0); // how many left the stack
+  const [landedCount, setLandedCount] = useState(0); // how many arrived in the queue
   const [fading, setFading] = useState(false);
+  const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
-    const formEnd = (letters.length - 1) * STAGGER + POP_DURATION + HOLD;
-    const fadeTimer = setTimeout(() => setFading(true), formEnd);
-    const resetTimer = setTimeout(() => {
-      setFading(false);
-      setCycle((c) => c + 1);
-    }, formEnd + FADE);
+    let cancelled = false;
+    const timeouts: number[] = [];
+    const total = stackLetters.length;
+
+    function popStep(k: number) {
+      if (cancelled) return;
+      setPoppedCount(k + 1);
+      timeouts.push(
+        window.setTimeout(() => {
+          if (!cancelled) setLandedCount(k + 1);
+        }, FLIGHT_DURATION)
+      );
+
+      if (k + 1 < total) {
+        timeouts.push(window.setTimeout(() => popStep(k + 1), STAGGER));
+      } else {
+        timeouts.push(
+          window.setTimeout(() => {
+            if (cancelled) return;
+            setFading(true);
+            timeouts.push(
+              window.setTimeout(() => {
+                if (cancelled) return;
+                setFading(false);
+                setPoppedCount(0);
+                setLandedCount(0);
+                setCycle((c) => c + 1);
+              }, FADE)
+            );
+          }, HOLD)
+        );
+      }
+    }
+
+    timeouts.push(window.setTimeout(() => popStep(0), STAGGER));
+
     return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(resetTimer);
+      cancelled = true;
+      timeouts.forEach((t) => window.clearTimeout(t));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cycle]);
 
-  // target x offset for each letter's queue slot
+  // map each letter in the full word to its x-offset within the queue,
+  // and to its index within the stack (si), skipping the space
   let cursor = 0;
-  const slotX = letters.map((ch) => {
-    const x = STACK_ZONE_WIDTH + GAP + cursor;
-    cursor += ch === ' ' ? SPACE_SLOT : SLOT;
-    return x;
+  let si = 0;
+  const queueMeta = letters.map((ch) => {
+    const x = cursor;
+    if (ch === ' ') {
+      cursor += SPACE_W;
+      return { x, w: SPACE_W, si: -1, ch };
+    }
+    cursor += CELL_W;
+    const meta = { x, w: CELL_W, si, ch };
+    si += 1;
+    return meta;
   });
   const queueWidth = cursor;
-  const rowWidth = STACK_ZONE_WIDTH + GAP + queueWidth + 20;
 
-  // fanned "in the pile" pose for a given letter index — shared by the
-  // static stack card and the flying letter's starting position, so the
-  // handoff between them looks seamless.
-  const stackPose = (i: number) => ({
-    x: 20 + (i % 3) * 14,
-    y: -Math.floor(i / 3) * 5,
-    rot: ((i % 5) - 2) * 6,
-  });
+  const stackH = stackLetters.length * COMPARTMENT_H;
+  const flyingIndex = poppedCount > landedCount ? poppedCount - 1 : -1;
+  const flyingMeta = flyingIndex >= 0 ? queueMeta.find((m) => m.si === flyingIndex) : undefined;
+
+  const originX = STACK_WIDTH / 2 - TILE_SIZE / 2;
+  const originY = (COMPARTMENT_H - TILE_SIZE) / 2;
+  const targetY = (CELL_W - TILE_SIZE) / 2;
 
   return (
     <div className="dsa-bg-page" aria-hidden="true">
       <h1 className="sr-only">DSA Visualizer</h1>
 
-      <div className="dsa-hero-row" style={{ width: rowWidth, height: ROW_HEIGHT }}>
-        {/* the pile that holds every letter before it pops out */}
-        <div className="dsa-stack-tray" style={{ width: STACK_ZONE_WIDTH }} />
-
-        <div key={cycle} style={{ opacity: fading ? 0 : 1, transitionDuration: `${FADE}ms` }} className="dsa-cycle">
-          {letters.map((ch, i) => {
-            if (ch === ' ') return null;
-            const pose = stackPose(i);
-            return (
+      <div key={cycle} className="dsa-composition" style={{ opacity: fading ? 0 : 1, transitionDuration: `${FADE}ms` }}>
+        {/* the stack: one compartment per letter, top pops first */}
+        <div className="dsa-stack-col" style={{ width: STACK_WIDTH }}>
+          <div className="dsa-stack-box" style={{ width: STACK_WIDTH, height: stackH }}>
+            {stackLetters.map((ch, i) => (
               <div
-                key={`card-${i}`}
-                className="dsa-stack-card"
-                style={{
-                  top: TILE_TOP,
-                  width: TILE_W,
-                  height: TILE_H,
-                  backgroundColor: PASTELS[i % PASTELS.length],
-                  zIndex: letters.length - i,
-                  transform: `translate(${pose.x}px, ${pose.y}px) rotate(${pose.rot}deg)`,
-                  animationDelay: `${i * STAGGER}ms`,
-                  animationDuration: `${STACK_LEAVE_DURATION}ms`,
-                }}
+                key={i}
+                className={`dsa-compartment ${i < poppedCount ? 'is-popped' : ''}`}
+                style={{ height: COMPARTMENT_H, backgroundColor: PASTELS[i % PASTELS.length] }}
               >
-                {ch}
+                <span>{ch}</span>
               </div>
-            );
-          })}
+            ))}
+          </div>
+          <span className="dsa-caption">stack</span>
+        </div>
 
-          {/* dashed queue-slot guides */}
-          <div className="dsa-queue-tray" style={{ left: STACK_ZONE_WIDTH + GAP, top: TILE_TOP, width: queueWidth }}>
-            {letters.map((ch, i) =>
-              ch === ' ' ? (
-                <div key={`slot-${i}`} style={{ width: SPACE_SLOT }} />
+        {/* the flying letter currently in transit */}
+        {flyingMeta && (
+          <div
+            key={flyingIndex}
+            className="dsa-flyer"
+            style={
+              {
+                width: TILE_SIZE,
+                height: TILE_SIZE,
+                backgroundColor: PASTELS[flyingIndex % PASTELS.length],
+                animationDuration: `${FLIGHT_DURATION}ms`,
+                '--ox': `${originX}px`,
+                '--oy': `${originY}px`,
+                '--tx': `${STACK_WIDTH + GAP + flyingMeta.x + (CELL_W - TILE_SIZE) / 2}px`,
+                '--ty': `${targetY}px`,
+              } as React.CSSProperties
+            }
+          >
+            {stackLetters[flyingIndex]}
+          </div>
+        )}
+
+        {/* the queue: fills left to right as letters land */}
+        <div className="dsa-queue-col" style={{ marginLeft: GAP }}>
+          <div className="dsa-queue-box" style={{ width: queueWidth, height: CELL_W }}>
+            {queueMeta.map((m, i) =>
+              m.ch === ' ' ? (
+                <div key={i} style={{ width: m.w }} />
               ) : (
-                <div key={`slot-${i}`} className="dsa-slot" style={{ width: SLOT - 6, marginRight: 6 }} />
+                <div
+                  key={i}
+                  className={`dsa-cell ${m.si < landedCount ? 'is-filled' : ''}`}
+                  style={{
+                    width: m.w,
+                    backgroundColor: m.si < landedCount ? PASTELS[m.si % PASTELS.length] : 'transparent',
+                  }}
+                >
+                  {m.si < landedCount && <span>{m.ch}</span>}
+                </div>
               )
             )}
           </div>
-
-          {/* letters flying from the pile into their queue slot */}
-          {letters.map((ch, i) => {
-            if (ch === ' ') return null;
-            const pose = stackPose(i);
-            return (
-              <div
-                key={`fly-${i}`}
-                className="dsa-letter"
-                style={
-                  {
-                    top: TILE_TOP,
-                    width: TILE_W,
-                    height: TILE_H,
-                    backgroundColor: PASTELS[i % PASTELS.length],
-                    animationDelay: `${i * STAGGER}ms`,
-                    animationDuration: `${POP_DURATION}ms`,
-                    '--sx': `${pose.x}px`,
-                    '--sy': `${pose.y}px`,
-                    '--srot': `${pose.rot}deg`,
-                    '--tx': `${slotX[i]}px`,
-                  } as React.CSSProperties
-                }
-              >
-                {ch}
-              </div>
-            );
-          })}
+          <span className="dsa-caption">queue</span>
         </div>
-
-        <span className="dsa-caption" style={{ left: STACK_ZONE_WIDTH / 2, top: TILE_TOP + TILE_H + 14 }}>
-          stack
-        </span>
-        <span
-          className="dsa-caption"
-          style={{ left: STACK_ZONE_WIDTH + GAP + queueWidth / 2, top: TILE_TOP + TILE_H + 14 }}
-        >
-          queue
-        </span>
       </div>
 
       <p className="dsa-tagline">Step through data structures and algorithms one operation at a time.</p>
