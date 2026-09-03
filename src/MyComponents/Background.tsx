@@ -101,10 +101,15 @@ export default function Background() {
   const targetY = queueColOffsetY + (CELL_W - TILE_SIZE) / 2;
 
   return (
-    <div className="dsa-bg-page" aria-hidden="true">
+    <section className="dsa-bg-page" id="hero">
       <h1 className="sr-only">DSA Visualizer</h1>
 
-      <div key={cycle} className="dsa-composition" style={{ opacity: fading ? 0 : 1, transitionDuration: `${FADE}ms` }}>
+      <div
+        key={cycle}
+        className="dsa-composition"
+        aria-hidden="true"
+        style={{ opacity: fading ? 0 : 1, transitionDuration: `${FADE}ms` }}
+      >
         {/* the stack: one compartment per letter, top pops first */}
         <div className="dsa-stack-col" style={{ width: STACK_WIDTH }}>
           <div className="dsa-stack-box" style={{ width: STACK_WIDTH, height: stackH }}>
@@ -168,6 +173,13 @@ export default function Background() {
       </div>
 
       <p className="dsa-tagline">Step through data structures and algorithms one operation at a time.</p>
-    </div>
+
+      <a href="#visualize" className="dsa-scroll-cue" aria-label="Scroll down to pick what to visualize">
+        <span>explore</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      </a>
+    </section>
   );
 }

@@ -1,5 +1,9 @@
 /* ---------- Reset: kill the default body margin that shows as a white
    border around the full-bleed background ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   margin: 0;
@@ -196,6 +200,126 @@ body {
   padding: 0 1rem;
 }
 
+/* ---------- Scroll cue at the bottom of the hero ---------- */
+.dsa-scroll-cue {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: rgba(30, 30, 30, 0.5);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  animation: dsa-bounce 1.8s ease-in-out infinite;
+}
+
+.dsa-scroll-cue svg {
+  width: 20px;
+  height: 20px;
+}
+
+.dsa-scroll-cue:hover {
+  color: rgba(30, 30, 30, 0.75);
+}
+
+@keyframes dsa-bounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 8px);
+  }
+}
+
+/* ---------- Categories section ---------- */
+.dsa-cat-section {
+  gap: 0.5rem;
+  padding: 4rem 1.5rem;
+}
+
+.dsa-cat-heading {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 700;
+  color: rgba(30, 30, 30, 0.85);
+  text-align: center;
+  margin: 0;
+}
+
+.dsa-cat-subheading {
+  color: rgba(30, 30, 30, 0.55);
+  text-align: center;
+  margin: 0 0 1.75rem;
+}
+
+.dsa-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+  max-width: 960px;
+  width: 100%;
+}
+
+.dsa-cat-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(30, 30, 30, 0.12);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  backdrop-filter: blur(2px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dsa-cat-card.is-available {
+  cursor: pointer;
+}
+
+.dsa-cat-card.is-available:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dsa-cat-card.is-locked {
+  opacity: 0.6;
+}
+
+.dsa-cat-chip {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border-radius: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.dsa-cat-card h3 {
+  margin: 0 0 0.4rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: rgba(30, 30, 30, 0.85);
+}
+
+.dsa-cat-card p {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: rgba(30, 30, 30, 0.6);
+  line-height: 1.4;
+}
+
+.dsa-cat-status {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(30, 30, 30, 0.5);
+}
+
 @media (max-width: 900px) {
   .dsa-composition {
     transform: scale(0.9);
@@ -211,8 +335,13 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .dsa-flyer,
   .dsa-compartment,
-  .dsa-cell span {
+  .dsa-cell span,
+  .dsa-scroll-cue {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }
