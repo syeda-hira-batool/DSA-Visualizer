@@ -39,19 +39,13 @@ body {
      smooth glide via `scroll-behavior: smooth` above */
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background-color: #e8d9a0;
+  background-color: #CCFBFF;
   background-attachment: fixed;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px),
-    radial-gradient(circle at 10% 15%, #7cc0e0 0%, transparent 40%),
-    radial-gradient(circle at 88% 12%, #c85d93 0%, transparent 38%),
-    radial-gradient(circle at 20% 88%, #e37256 0%, transparent 42%),
-    radial-gradient(circle at 92% 85%, #5aa290 0%, transparent 42%),
-    radial-gradient(circle at 50% 50%, #e0a050 0%, transparent 55%);
-  background-size:
-    32px 32px, 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
-    100% 100%;
+    linear-gradient(135deg, #CCFBFF 0%, #EF96C5 100%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
 }
 
 .sr-only {
