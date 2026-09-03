@@ -25,8 +25,9 @@ export default function Background() {
   const letters = WORD.split(''); // full word incl. space, for the queue layout
   const stackLetters = letters.filter((ch) => ch !== ' '); // what actually sits in the stack
 
-  const [poppedCount, setPoppedCount] = useState(0); // how many left the stack
-  const [landedCount, setLandedCount] = useState(0); // how many arrived in the queue
+  const [poppedCount, setPoppedCount] = useState(0); // how many are currently out of the stack
+  const [landedCount, setLandedCount] = useState(0); // how many are currently settled in the queue
+  const [phase, setPhase] = useState<'toQueue' | 'toStack'>('toQueue');
   const [fading, setFading] = useState(false);
   const [cycle, setCycle] = useState(0);
 
@@ -35,7 +36,8 @@ export default function Background() {
     const timeouts: number[] = [];
     const total = stackLetters.length;
 
-    function popStep(k: number) {
+    // letters pop off the stack, one by one, into the queue
+    function toQueueStep(k: number) {
       if (cancelled) return;
       setPoppedCount(k + 1);
       timeouts.push(
@@ -45,7 +47,31 @@ export default function Background() {
       );
 
       if (k + 1 < total) {
-        timeouts.push(window.setTimeout(() => popStep(k + 1), STAGGER));
+        timeouts.push(window.setTimeout(() => toQueueStep(k + 1), STAGGER));
+      } else {
+        timeouts.push(
+          window.setTimeout(() => {
+            if (cancelled) return;
+            setPhase('toStack');
+            timeouts.push(window.setTimeout(() => toStackStep(total - 1), STAGGER));
+          }, HOLD)
+        );
+      }
+    }
+
+    // letters fly back out of the queue into the stack, last-out first —
+    // undoing the sequence exactly, so the stack rebuilds top-last
+    function toStackStep(k: number) {
+      if (cancelled) return;
+      setLandedCount(k); // leaves the queue immediately
+      timeouts.push(
+        window.setTimeout(() => {
+          if (!cancelled) setPoppedCount(k); // reappears in the stack after the flight
+        }, FLIGHT_DURATION)
+      );
+
+      if (k > 0) {
+        timeouts.push(window.setTimeout(() => toStackStep(k - 1), STAGGER));
       } else {
         timeouts.push(
           window.setTimeout(() => {
@@ -55,6 +81,7 @@ export default function Background() {
               window.setTimeout(() => {
                 if (cancelled) return;
                 setFading(false);
+                setPhase('toQueue');
                 setPoppedCount(0);
                 setLandedCount(0);
                 setCycle((c) => c + 1);
@@ -65,7 +92,7 @@ export default function Background() {
       }
     }
 
-    timeouts.push(window.setTimeout(() => popStep(0), STAGGER));
+    timeouts.push(window.setTimeout(() => toQueueStep(0), STAGGER));
 
     return () => {
       cancelled = true;
@@ -99,6 +126,13 @@ export default function Background() {
   const originY = (COMPARTMENT_H - TILE_SIZE) / 2;
   const queueColOffsetY = (stackH - CELL_W) / 2; // queue is vertically centered against the stack
   const targetY = queueColOffsetY + (CELL_W - TILE_SIZE) / 2;
+  const queueX = flyingMeta ? STACK_WIDTH + GAP + flyingMeta.x + (CELL_W - TILE_SIZE) / 2 : 0;
+
+  // toQueue: stack -> queue. toStack: queue -> stack (reverse).
+  const ox = phase === 'toQueue' ? originX : queueX;
+  const oy = phase === 'toQueue' ? originY : targetY;
+  const tx = phase === 'toQueue' ? queueX : originX;
+  const ty = phase === 'toQueue' ? targetY : originY;
 
   return (
     <section className="dsa-bg-page" id="hero">
@@ -137,10 +171,10 @@ export default function Background() {
                 height: TILE_SIZE,
                 backgroundColor: PASTELS[flyingIndex % PASTELS.length],
                 animationDuration: `${FLIGHT_DURATION}ms`,
-                '--ox': `${originX}px`,
-                '--oy': `${originY}px`,
-                '--tx': `${STACK_WIDTH + GAP + flyingMeta.x + (CELL_W - TILE_SIZE) / 2}px`,
-                '--ty': `${targetY}px`,
+                '--ox': `${ox}px`,
+                '--oy': `${oy}px`,
+                '--tx': `${tx}px`,
+                '--ty': `${ty}px`,
               } as React.CSSProperties
             }
           >
