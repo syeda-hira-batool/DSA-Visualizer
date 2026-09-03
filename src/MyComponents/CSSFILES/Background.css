@@ -39,16 +39,16 @@ body {
      smooth glide via `scroll-behavior: smooth` above */
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background-color: #f7efd0;
+  background-color: #e8d9a0;
   background-attachment: fixed;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
-    radial-gradient(circle at 10% 15%, #a9d8f0 0%, transparent 40%),
-    radial-gradient(circle at 88% 12%, #e17fb0 0%, transparent 38%),
-    radial-gradient(circle at 20% 88%, #f2977e 0%, transparent 42%),
-    radial-gradient(circle at 92% 85%, #7ec0ad 0%, transparent 42%),
-    radial-gradient(circle at 50% 50%, #f2c078 0%, transparent 55%);
+    linear-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px),
+    radial-gradient(circle at 10% 15%, #7cc0e0 0%, transparent 40%),
+    radial-gradient(circle at 88% 12%, #c85d93 0%, transparent 38%),
+    radial-gradient(circle at 20% 88%, #e37256 0%, transparent 42%),
+    radial-gradient(circle at 92% 85%, #5aa290 0%, transparent 42%),
+    radial-gradient(circle at 50% 50%, #e0a050 0%, transparent 55%);
   background-size:
     32px 32px, 32px 32px, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
     100% 100%;
@@ -88,7 +88,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(30, 30, 30, 0.5);
+  color: rgba(20, 20, 20, 0.62);
 }
 
 /* ---------- The stack box: one compartment per letter ---------- */
@@ -209,7 +209,7 @@ body {
 .dsa-tagline {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 0.9rem;
-  color: rgba(30, 30, 30, 0.55);
+  color: rgba(20, 20, 20, 0.68);
   text-align: center;
   padding: 0 1rem;
 }
@@ -225,7 +225,7 @@ body {
   align-items: center;
   gap: 4px;
   text-decoration: none;
-  color: rgba(30, 30, 30, 0.5);
+  color: rgba(20, 20, 20, 0.62);
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 11px;
   text-transform: uppercase;
@@ -268,7 +268,7 @@ body {
 }
 
 .dsa-cat-subheading {
-  color: rgba(30, 30, 30, 0.55);
+  color: rgba(20, 20, 20, 0.68);
   text-align: center;
   margin: 0 0 1.75rem;
 }
@@ -331,7 +331,7 @@ body {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(30, 30, 30, 0.5);
+  color: rgba(20, 20, 20, 0.62);
 }
 
 @media (max-width: 900px) {
