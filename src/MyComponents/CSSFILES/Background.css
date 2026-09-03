@@ -2,6 +2,7 @@
    border around the full-bleed background ---------- */
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
 }
 
 html,
@@ -20,12 +21,17 @@ body {
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2.5rem;
   overflow: hidden;
+  /* one wheel/swipe lands you on this section; snaps happen with a
+     smooth glide via `scroll-behavior: smooth` above */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   background-color: #fffce1;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.65) 1px, transparent 1px),
@@ -343,5 +349,6 @@ body {
 
   html {
     scroll-behavior: auto;
+    scroll-snap-type: none;
   }
 }
