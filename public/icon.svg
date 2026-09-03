@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <title>Stack Icon</title>
+
+  <!-- Top layer -->
+  <path d="M16 4L27 10L16 16L5 10L16 4Z"
+        fill="#8B5CF6"/>
+
+  <!-- Middle layer -->
+  <path d="M5 15L16 21L27 15V20L16 26L5 20V15Z"
+        fill="#7C3AED"/>
+
+  <!-- Bottom layer -->
+  <path d="M5 22L16 28L27 22V26L16 32L5 26V22Z"
+        fill="#6D28D9"/>
+</svg>
