@@ -6,11 +6,11 @@
   min-height: 100vh;
   box-sizing: border-box;
   padding: 2.5rem 1.5rem 5rem;
-  background-color: #07a3b2;
+  background-color: #CCFBFF;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.45) 1px, transparent 1px),
-    linear-gradient(135deg, #07a3b2 0%, #d9ecc7 100%);
+    linear-gradient(135deg, #CCFBFF 0%, #EF96C5 100%);
   background-size: 32px 32px, 32px 32px, 100% 100%;
   background-attachment: fixed;
 }
