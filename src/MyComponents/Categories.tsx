@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './CSSFILES/Background.css';
 
 const PASTELS = [
@@ -12,10 +13,11 @@ interface Category {
   count: number;
   available: boolean;
   color: string;
+  path?: string;
 }
 
 const categories: Category[] = [
-  { title: 'Sorting', tagline: 'Watch comparisons and swaps unfold, line by line.', count: 5, available: true, color: PASTELS[1] },
+  { title: 'Sorting', tagline: 'Watch comparisons and swaps unfold, line by line.', count: 5, available: true, color: PASTELS[1], path: '/sorting' },
   { title: 'Linked List', tagline: 'Pointers, nodes, and the chains that connect them.', count: 0, available: false, color: PASTELS[5] },
   { title: 'Trees', tagline: 'Traversals, balancing, and hierarchical structure.', count: 0, available: false, color: PASTELS[4] },
   { title: 'Hash Maps', tagline: 'Buckets, collisions, and constant-time lookups.', count: 0, available: false, color: PASTELS[7] },
@@ -30,16 +32,25 @@ export default function Categories() {
       <p className="dsa-cat-subheading">Pick a structure to start stepping through it.</p>
 
       <div className="dsa-cat-grid">
-        {categories.map((cat) => (
-          <div key={cat.title} className={`dsa-cat-card ${cat.available ? 'is-available' : 'is-locked'}`}>
-            <span className="dsa-cat-chip" style={{ backgroundColor: cat.color }} />
-            <h3>{cat.title}</h3>
-            <p>{cat.tagline}</p>
-            <span className="dsa-cat-status">
-              {cat.available ? `${cat.count} algorithms →` : 'coming soon'}
-            </span>
-          </div>
-        ))}
+        {categories.map((cat) => {
+          const card = (
+            <div className={`dsa-cat-card ${cat.available ? 'is-available' : 'is-locked'}`}>
+              <span className="dsa-cat-chip" style={{ backgroundColor: cat.color }} />
+              <h3>{cat.title}</h3>
+              <p>{cat.tagline}</p>
+              <span className="dsa-cat-status">
+                {cat.available ? `${cat.count} algorithms →` : 'coming soon'}
+              </span>
+            </div>
+          );
+          return cat.available && cat.path ? (
+            <Link key={cat.title} to={cat.path} style={{ textDecoration: 'none', color: 'inherit' }}>
+              {card}
+            </Link>
+          ) : (
+            <div key={cat.title}>{card}</div>
+          );
+        })}
       </div>
     </section>
   );
