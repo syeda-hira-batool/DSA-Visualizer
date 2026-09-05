@@ -45,3 +45,42 @@ export interface AlgorithmConfig {
   flashcards: Flashcard[];
   leetLinks: LeetLink[];
 }
+
+/* ------------------------------ Linked lists ----------------------------- */
+
+export interface LLNode {
+  id: number;
+  value: number;
+}
+
+export interface LLStep {
+  nodes: LLNode[];
+  /** node currently being visited while traversing */
+  pointerIndex: number | null;
+  /** secondary highlight: found node, node about to be unlinked, etc. */
+  highlightIndex: number | null;
+  /** index of a freshly-created node not yet linked in, or just linked */
+  newIndex: number | null;
+  codeLine: number;
+  note: string;
+}
+
+export interface LLOperation {
+  id: string;
+  name: string;
+  code: string[];
+  needsValue: boolean;
+  valueLabel?: string;
+  needsPosition: boolean;
+  generateSteps: (initial: number[], value?: number, position?: number) => LLStep[];
+}
+
+export interface ListTypeConfig {
+  id: 'singly' | 'doubly';
+  name: string;
+  description: string;
+  operations: LLOperation[];
+  quiz: QuizQuestion[];
+  flashcards: Flashcard[];
+  leetLinks: LeetLink[];
+}
