@@ -18,7 +18,7 @@ interface Category {
 
 const categories: Category[] = [
   { title: 'Sorting', tagline: 'Watch comparisons and swaps unfold, line by line.', count: 5, available: true, color: PASTELS[1], path: '/sorting' },
-  { title: 'Linked List', tagline: 'Pointers, nodes, and the chains that connect them.', count: 0, available: false, color: PASTELS[5] },
+  { title: 'Linked List', tagline: 'Pointers, nodes, and the chains that connect them.', count: 2, available: true, color: PASTELS[5], path: '/linkedlist' },
   { title: 'Trees', tagline: 'Traversals, balancing, and hierarchical structure.', count: 0, available: false, color: PASTELS[4] },
   { title: 'Hash Maps', tagline: 'Buckets, collisions, and constant-time lookups.', count: 0, available: false, color: PASTELS[7] },
   { title: 'Graphs', tagline: 'BFS, DFS, and the shortest paths between nodes.', count: 0, available: false, color: PASTELS[9] },
