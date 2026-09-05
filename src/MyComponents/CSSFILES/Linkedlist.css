@@ -1,0 +1,125 @@
+/* ---------- Node-and-arrow visualization row ---------- */
+.dsv-ll-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 110px;
+  padding: 1rem 0.25rem;
+}
+
+.dsv-ll-empty {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: rgba(20, 20, 20, 0.5);
+  padding: 1.5rem 0;
+}
+
+.dsv-ll-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  height: 54px;
+  padding: 0 0.6rem;
+  border-radius: 0.6rem;
+  border: 2px solid rgba(30, 30, 30, 0.3);
+  background: rgba(255, 255, 255, 0.75);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: rgba(20, 20, 20, 0.85);
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.dsv-ll-node-idx {
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(20, 20, 20, 0.4);
+  margin-top: 1px;
+}
+
+.dsv-ll-node.is-pointer {
+  border-color: #07a3b2;
+  background: rgba(7, 163, 178, 0.16);
+  transform: translateY(-3px);
+}
+
+.dsv-ll-node.is-highlight {
+  border-color: #4a9b6e;
+  background: rgba(74, 155, 110, 0.18);
+}
+
+.dsv-ll-node.is-new {
+  border-color: #8a6fd8;
+  background: rgba(138, 111, 216, 0.16);
+}
+
+.dsv-ll-arrow {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 1.2rem;
+  color: rgba(20, 20, 20, 0.4);
+  flex-shrink: 0;
+}
+
+.dsv-ll-null {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: rgba(20, 20, 20, 0.45);
+  border: 1px dashed rgba(30, 30, 30, 0.3);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+}
+
+/* ---------- Operation picker + param inputs ---------- */
+.dsv-op-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.dsv-op-btn {
+  text-align: left;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.78rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(30, 30, 30, 0.18);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(20, 20, 20, 0.7);
+  cursor: pointer;
+}
+
+.dsv-op-btn.is-active {
+  border-color: #07a3b2;
+  background: rgba(7, 163, 178, 0.16);
+  color: rgba(20, 20, 20, 0.9);
+}
+
+.dsv-param-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-top: 0.9rem;
+}
+
+.dsv-param-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dsv-param-field label {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(20, 20, 20, 0.5);
+}
+
+.dsv-param-field input {
+  width: 120px;
+}

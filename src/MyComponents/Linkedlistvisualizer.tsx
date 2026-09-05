@@ -5,7 +5,7 @@ import Quiz from './Quiz';
 import Flashcards from './Flashcards';
 import LeetLinks from './LeetLinks';
 import './CSSFILES/Sorting.css';
-import './CSSFILES/LinkedList.css';
+import './CSSFILES/Linkedlist.css';
 
 const TABS = ['Visualize', 'Quiz', 'Flashcards', 'LeetCode'] as const;
 type Tab = (typeof TABS)[number];
