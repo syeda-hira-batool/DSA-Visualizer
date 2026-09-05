@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import Background from './MyComponents/Background';
 import Categories from './MyComponents/Categories';
-import SortingHub from './MyComponents/SortingHub';
-import SortVisualizer from './MyComponents/SortVisualizer';
-import LinkedListHub from './MyComponents/LinkedListHub';
-import LinkedListVisualizer from './MyComponents/LinkedListVisualizer';
+import SortingHub from './MyComponents/Sortinghub';
+import SortVisualizer from './MyComponents/Sortvisualizer';
+import LinkedListHub from './MyComponents/Linkedlisthub';
+import LinkedListVisualizer from './MyComponents/Linkedlistvisualizer';
 
 function Home() {
   return (
